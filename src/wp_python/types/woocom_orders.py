@@ -1,6 +1,10 @@
+""" 
+Yay! more types
+https://woocommerce.github.io/woocommerce-rest-api-docs/#order-properties
+"""
+import typing
 import datetime
 from typing import TypedDict
-import typing
 
 class Billing(TypedDict) : 
     first_name : str
@@ -25,6 +29,79 @@ class Shipping(TypedDict) :
     state : str 
     postcode : str 
     country : str 
+
+class MetaData(TypedDict) : 
+    id : int  
+    key : str 
+    value : str 
+
+class Taxes(TypedDict) : 
+    id : int 
+    rate_code : str
+    rate_id : str 
+    label : str 
+    compound : bool 
+    tax_total : str 
+    shipping_tax_total : str 
+    meta_data : list[MetaData] 
+
+class LineItems(TypedDict) : 
+    id : int 
+    name : str 
+    product_id : str 
+    variation_id : str 
+    quantity : str 
+    tax_class : str 
+    subtotal : str 
+    subtotal_tax : str 
+    total : str 
+    total_tax : str 
+    taxes : list[Taxes] 
+    meta_data : list[MetaData]
+    sku : str 
+    price : str 
+
+class TaxLines(TypedDict) : 
+    id : int 
+    rate_code : str 
+    rate_id : str 
+    label : str 
+    compound : bool
+    tax_total : str 
+    shipping_tax_total : str 
+    meta_data : list[MetaData] 
+
+class ShippingLines(TypedDict) : 
+    id : int 
+    method_title : str 
+    method_id : str 
+    total : str 
+    total_tax : str 
+    taxes : list[TaxLines] 
+    meta_data : list[MetaData] 
+
+class FeeLines(TypedDict) : 
+    id : int 
+    name : str 
+    tax_class : str 
+    tax_status : str
+    total : str 
+    total_tax : str 
+    taxes : list[TaxLines] 
+    meta_data : list[MetaData] 
+
+class CouponLines(TypedDict) : 
+    id : int 
+    code : str 
+    discount : str 
+    discount_tax : str 
+    meta_data : list[MetaData] 
+
+class Refunds(TypedDict) : 
+    id : int 
+    reason : str 
+    total : str 
+
 
 ORDER_STATUS = typing.Literal['pending', 'processing', 'on-hold', 'completed', 'cancelled', 'refunded', 'failed' , 'trash']
 

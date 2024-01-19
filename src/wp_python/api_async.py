@@ -4,16 +4,16 @@ For usage with the asyncio module.
 import json 
 import logging 
 import aiohttp
-from .api import API
-from contextlib import asynccontextmanager, contextmanager
+from .api import WooComAPI
+from contextlib import asynccontextmanager
 
 logger = logging.getLogger(__name__)
 
-class AsyncAPI(API) : 
+class WooComAsyncAPI(WooComAPI) : 
     """
-    Changes the request methods to use the aiohttp module. 
+    Changes the request methods to use the aiohttp module, useful if you want to use the normal API class given from the woocommerce.API class.
 
-    This does make the methods into async context managers so use like 
+    This does make the methods into async context managers so use like  
 
     ```python
     async with api.get('orders') as response : 
@@ -81,4 +81,4 @@ class AsyncAPI(API) :
         """ DELETE requests """
         async with self.request("DELETE", endpoint, None, **kwargs) as response : 
             yield response 
-    
+

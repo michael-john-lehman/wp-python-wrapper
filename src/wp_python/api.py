@@ -1,13 +1,13 @@
 import woocommerce 
 
-from .types import WooCommerceRestAPIAuthentication 
+from .types import WooComAuth , WP_RestAPIAuth
 
-class API(woocommerce.API) : 
+class WooComAPI(woocommerce.API) : 
     """ 
     Changes the initialised parameters to use the `WooCommerceRestAPIAuthentication` TypeDict. 
     """
 
-    def __init__(self, config : WooCommerceRestAPIAuthentication) :
+    def __init__(self, config : WooComAuth) :
         super().__init__(
             url=config["url"],
             consumer_key=config["consumer_key"],
@@ -16,3 +16,22 @@ class API(woocommerce.API) :
             version=config.get('version',"wc/v3") 
         ) 
 
+
+class WP_RestAPI : 
+
+    def __init__(self, config : WP_RestAPIAuth) -> None:
+        self.__domain = config['domain']
+        self.__username = config['username'] 
+        self.__password = config['application_pwd'] 
+        self.__https = config.get('https', True)
+        self.__version = config.get('version', 'wp/v2') 
+    
+    def get_url(self, endpoint : str, **kwargs) : 
+        url_params = '' 
+        for key in kwargs : 
+            url_params += f'{key}={kwargs.get(key)}&'
+        return f'{"https" if self.__https else "http"}://{self.__username}:{self.__password}@{self.__domain}/wp-json/{self.__version}/{endpoint}?{url_params}'  
+    
+    # need to change this at some point
+    def get_headers(self) : 
+        return {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36})'} 

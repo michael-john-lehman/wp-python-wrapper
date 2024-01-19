@@ -1,6 +1,6 @@
 import typing
 
-class WooCommerceRestAPIAuthentication(typing.TypedDict) : 
+class WooComAuth(typing.TypedDict) : 
     """ 
     
     Keys:
@@ -23,3 +23,9 @@ class WooCommerceRestAPIAuthentication(typing.TypedDict) :
     wp_api : typing.Optional[bool]
     version : typing.Optional[typing.Literal["wc/v3"]] 
 
+class WP_RestAPIAuth(typing.TypedDict) : 
+    domain : str 
+    username : str 
+    application_pwd : str
+    version : typing.Optional[typing.Literal['wp/v2']] 
+    https : typing.Optional[bool] 
