@@ -1,7 +1,8 @@
 """ 
 Product Properties nicely typed out for you, what do you say? thank you
 """
-from typing import TypedDict , Literal, Final 
+from typing import TypedDict , Literal, Final
+import typing 
 
 class Downloadable(TypedDict) : 
     """
@@ -328,3 +329,105 @@ class Product(TypedDict) :
     meta_data : list[MetaData] 
 
 
+class ProductGetQuery(TypedDict) :
+    """
+    https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-products
+    """
+    context : Literal['edit', 'view']  | None 
+    page : int | None 
+    per_page : int | None 
+    search : str | None 
+    after : str | None 
+    before : str | None 
+    modified_after : str | None 
+    modified_before : str | None 
+    dates_are_gmt : bool | None 
+    exclude : list[int] | None 
+    include : list[int] | None 
+    offset : int | None 
+    order : Literal['desc', 'asc'] | None 
+    orderby : Literal['date', 'id', 'include', 'title', 'slug', 'price', 'popularity', 'rating'] | None 
+    parent : list[int] | None 
+    parent_exclude : list[int] | None 
+    slug : str | None 
+    status : Literal['any', 'draft', 'pending', 'private', 'publish'] | None 
+    type : Literal['simple', 'grouped', 'external', 'variable'] | None 
+    sku : str | None 
+    featured : bool | None 
+    category : str | None 
+    tag : str | None 
+    shipping_class : str | None 
+    attribute : str | None 
+    attribute_term : str | None 
+    tax_class : str | None 
+    on_sale : str | None 
+    min_price : str | None 
+    max_price : str | None 
+    stock_status  : str | None 
+
+def product_query_params(
+    context : Literal['edit', 'view']  | None = None,
+    page : int | None = None,
+    per_page : int | None = None,
+    search : str | None = None,
+    after : str | None = None,
+    before : str | None = None,
+    modified_after : str | None = None,
+    modified_before : str | None = None,
+    dates_are_gmt : bool | None = None,
+    exclude : list[int] | None = None,
+    include : list[int] | None = None,
+    offset : int | None = None,
+    order : Literal['desc', 'asc'] | None = None,
+    orderby : Literal['date', 'id', 'include', 'title', 'slug', 'price', 'popularity', 'rating'] | None = None,
+    parent : list[int] | None = None,
+    parent_exclude : list[int] | None = None,
+    slug : str | None = None,
+    status : Literal['any', 'draft', 'pending', 'private', 'publish'] | None = None,
+    type : Literal['simple', 'grouped', 'external', 'variable'] | None = None,
+    sku : str | None = None,
+    featured : bool | None = None,
+    category : str | None = None,
+    tag : str | None = None,
+    shipping_class : str | None = None,
+    attribute : str | None = None,
+    attribute_term : str | None = None,
+    tax_class : str | None = None,
+    on_sale : str | None = None,
+    min_price : str | None = None,
+    max_price : str | None = None,
+    stock_status  : str | None= None 
+) -> ProductGetQuery : 
+    return {
+        'context' : context,
+        'page' : page,
+        'per_page' : per_page,
+        'search' : search,
+        'after' : after,
+        'before' : before,
+        'modified_after' : modified_after,
+        'modified_before' : modified_before,
+        'dates_are_gmt' : dates_are_gmt,
+        'exclude' : exclude,
+        'include' : include,
+        'offset' : offset,
+        'order' : order,
+        'orderby' : orderby,
+        'parent' : parent,
+        'parent_exclude' : parent_exclude,
+        'slug' : slug,
+        'status' : status,
+        'type' : type,
+        'sku' : sku,
+        'featured' : featured,
+        'category' : category,
+        'tag' : tag,
+        'shipping_class' : shipping_class,
+        'attribute' : attribute,
+        'attribute_term' : attribute_term,
+        'tax_class' : tax_class,
+        'on_sale' : on_sale,
+        'min_price' : min_price,
+        'max_price' : max_price,
+        'stock_status' : stock_status,
+    }

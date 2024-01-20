@@ -26,7 +26,6 @@ class Users :
         headers = headers or {} 
         headers['X-WP-Nonce'] = nonce_cookie 
         response = requests.get(f'{url}/wp-json/wp/v2/users/me?context=edit', headers=headers)
-        print(response.status_code) 
         if response.status_code == 200 : 
             return response.text
         return None 

@@ -4,7 +4,11 @@ For usage with the asyncio module.
 import json 
 import logging 
 import aiohttp
-from .api import WooComAPI
+
+from wp_python.types import WP_RestAPIAuth
+
+from .types import WooComAuth
+from .api import WooComAPI, WP_RestAPI
 from contextlib import asynccontextmanager
 
 logger = logging.getLogger(__name__)
@@ -20,6 +24,21 @@ class WooComAsyncAPI(WooComAPI) :
         data = await response.json() 
     ```
     """
+    def __init__(self, config: WooComAuth):
+        super().__init__(config)
+        auth = None 
+        headers = {
+            "user-agent": f"{self.user_agent}",
+            "accept": "application/json",
+            "content-type" : "application/json;charset=utf-8" 
+        }
+        if self.is_ssl is True and self.query_string_auth is False:
+            auth = aiohttp.BasicAuth(self.consumer_key, self.consumer_secret)
+        self.session = aiohttp.ClientSession(
+            auth=auth,
+            headers=headers,
+        ) 
+
     def get_url(self, endpoint) : 
         url : str = self.url
         api = "wc-api"
@@ -32,32 +51,20 @@ class WooComAsyncAPI(WooComAPI) :
     @asynccontextmanager
     async def request(self, method, endpoint, data, params=None, **kwargs) : 
         url = self.get_url(endpoint)
-        auth = None
-        headers = {
-            "user-agent": f"{self.user_agent}",
-            "accept": "application/json"
-        }
-        if self.is_ssl is True and self.query_string_auth is False:
-            auth = aiohttp.BasicAuth(self.consumer_key, self.consumer_secret)
         if data is not None:
             data = json.dumps(data, ensure_ascii=False).encode('utf-8')
-            headers["content-type"] = "application/json;charset=utf-8"
-        async with aiohttp.ClientSession(
-            auth=auth,
-            headers=headers,
-            ) as Session : 
-            match method : 
-                case "GET" : 
-                    yield await Session.get(url)
-                case "POST" : 
-                    yield await Session.post(url, data=data)
-                case "PATCH" : 
-                    yield await Session.patch(url , data=data)
-                case "DELETE" : 
-                    yield await Session.delete(url)
-                case "PUT" : 
-                    yield await Session.put(url,data=data) 
-    
+        match method : 
+            case "GET" : 
+                yield await self.session.get(url)
+            case "POST" : 
+                yield await self.session.post(url, data=data)
+            case "PATCH" : 
+                yield await self.session.patch(url , data=data)
+            case "DELETE" : 
+                yield await self.session.delete(url)
+            case "PUT" : 
+                yield await self.session.put(url,data=data) 
+
     @asynccontextmanager
     async def get(self, endpoint, **kwargs):
         """ Get requests """
@@ -82,3 +89,14 @@ class WooComAsyncAPI(WooComAPI) :
         async with self.request("DELETE", endpoint, None, **kwargs) as response : 
             yield response 
 
+    async def close(self) : 
+        await self.session.close()
+
+class WP_RestAsyncAPI(WP_RestAPI) : 
+
+    def __init__(self, config: WP_RestAPIAuth) -> None:
+        super().__init__(config) 
+        self.session = aiohttp.ClientSession(headers=self.get_headers()) 
+
+    async def close(self) : 
+        await self.session.close()

@@ -16,6 +16,24 @@ class WooComAPI(woocommerce.API) :
             version=config.get('version',"wc/v3") 
         ) 
 
+    def serialise_query_params(self, params : dict, not_instance) : 
+        """
+        Serialises the dictionary of query parameters.
+
+        i.e. `{'page' : 5, 'exclude' : [50]}` -> `page=5&exclude=[50]`
+        """
+        ...
+        query = [] 
+        for key in params : 
+            
+            if params[key] and not isinstance(params[key], not_instance) : 
+                param = f'{key}={params[key]}'
+                query.append(param) 
+        query = '&'.join(query) 
+        return query 
+                
+
+
 
 class WP_RestAPI : 
 
