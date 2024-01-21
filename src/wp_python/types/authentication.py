@@ -1,5 +1,5 @@
 import typing
-
+from typing import Optional, NotRequired, TypedDict
 class WooComAuth(typing.TypedDict) : 
     """ 
     
@@ -19,9 +19,8 @@ class WooComAuth(typing.TypedDict) :
     consumer_key : str 
     consumer_secret : str 
     url : str 
-
-    wp_api : typing.Optional[bool]
-    version : typing.Optional[typing.Literal["wc/v3"]] 
+    wp_api : NotRequired[bool]
+    version : NotRequired[typing.Literal["wc/v3"]]
 
 class WP_RestAPIAuth(typing.TypedDict) : 
     domain : str 

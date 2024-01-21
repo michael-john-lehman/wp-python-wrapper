@@ -5,9 +5,7 @@ import json
 import logging 
 import aiohttp
 
-from wp_python.types import WP_RestAPIAuth
-
-from .types import WooComAuth
+from .types import WooComAuth, WP_RestAPIAuth
 from .api import WooComAPI, WP_RestAPI
 from contextlib import asynccontextmanager
 
@@ -39,7 +37,7 @@ class WooComAsyncAPI(WooComAPI) :
             headers=headers,
         ) 
 
-    def get_url(self, endpoint) : 
+    def get_url(self, endpoint) :
         url : str = self.url
         api = "wc-api"
         if url.endswith("/") is False:

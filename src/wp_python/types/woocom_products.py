@@ -4,6 +4,7 @@ Product Properties nicely typed out for you, what do you say? thank you
 from typing import TypedDict , Literal, Final
 import typing 
 
+
 class Downloadable(TypedDict) : 
     """
     ## Product - Downloads properties
@@ -18,6 +19,7 @@ class Downloadable(TypedDict) :
     id	: str 
     name : str
     file :	str 
+
 
 class Dimensions(TypedDict) : 
     """
@@ -35,10 +37,12 @@ class Dimensions(TypedDict) :
     width	: str 
     height	: str 
 
+
 class Categories(TypedDict) : 
     id	: str 
     name : str # READ ON:Y 
     slug : str # READ ONLY 
+
 
 class Tags(TypedDict) : 
     id	: str 
