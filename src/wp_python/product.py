@@ -1,8 +1,10 @@
 import queue
 
 from . import types
-from .types.woocom_products import product_query_params as query_params
-from .api import WooComAPI 
+from .api import WooComAPI
+from .types.woocom_products import product_query_params
+
+query_params = product_query_params
 
 
 class ProductBatchUpdater:
@@ -25,11 +27,14 @@ class ProductBatchUpdater:
         if sum(len(x) for x in arrays) > 0:
             yield arrays
 
-    def __init__(self, api: WooComAPI):
+    def __init__(self, api: WooComAPI, **kwargs):
         self.__api = api
         self.__create = queue.Queue[types.products.Product]()
         self.__update = queue.Queue[types.products.Product]()
         self.__delete = queue.Queue[int]()
+        self.__allow_create = kwargs.get('create', True)
+        self.__allow_update = kwargs.get('update', True)
+        self.__allow_delete = kwargs.get('delete', True)
 
     def append_create(self, data: types.products.Product):
         self.__create.put(data)
@@ -44,11 +49,10 @@ class ProductBatchUpdater:
         for data in self.gather_from_queues(100, self.__create, self.__update, self.__delete):
             create, update, delete = data
             self.__api.post("products/batch", {
-                'create': create,
-                'update': update,
-                'delete': delete
+                'create': create if self.__allow_create else [],
+                'update': update if self.__allow_update else [],
+                'delete': delete if self.__allow_delete else []
             })
-
 
 
 class Products:
@@ -70,7 +74,5 @@ class Products:
             return response.json()
 
     def batch(self, create: bool = None, update: bool = None, delete: bool = None):
-        def inner():
-            ...
-        return inner
+        yield ProductBatchUpdater(self.__api, create=create, delete=delete, update=update)
 
